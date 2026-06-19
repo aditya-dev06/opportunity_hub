@@ -140,7 +140,7 @@ const VITBhopalGuide = ({ isVitBhopal, userSemester = 1, userProgram = '' }) => 
           </p>
           <ul className="guide-tips-list" style={{ marginTop: '1rem' }}>
             <li className="guide-tip">
-              Identify a niche subdomain in your 2nd or 3rd year, such as **Physics-Informed Neural Networks (PINNs)**, **Bioinformatics**, or **Graph Neural Networks**.
+              Identify a niche subdomain in your 2nd or 3rd year, such as <strong>Physics-Informed Neural Networks (PINNs)</strong>, <strong>Bioinformatics</strong>, or <strong>Graph Neural Networks</strong>.
             </li>
             <li className="guide-tip">
               Approach professors in the School of Computing Science and Engineering (SCSE) who specialize in data analytics or numerical simulations.

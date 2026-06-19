@@ -28,3 +28,20 @@
 - [x] Run `npm run lint` to verify clean frontend linter status
 - [x] Run `npm run build` to verify clean production compile
 - [x] Verify club leader lookup, card expansion, and admin pinning behaviors
+
+## Phase 6: Privacy Policy and Terms & Conditions Redirection
+- [x] Update frontend hyperlinks in Auth.jsx to point back to /terms and /privacy
+- [x] Create TermsAndConditions.jsx with IT Act / DPDP Act / GDPR compliance details
+- [x] Create PrivacyPolicy.jsx with DPDP Act / GDPR / CCPA compliance details
+- [x] Add client-side pathname checks in App.jsx to render the documents on /terms and /privacy routes
+- [x] Remove Express backend 302 redirects in server.js to allow page loading
+- [x] Verify clean eslint validation and production build compilation
+
+## Phase 7: Zero-Delay Deployment & SMTP Resiliency
+- [x] Implement database-backed persistent JWT_SECRET lookup for serverless environments
+- [x] Make SMTP verification warning-only on boot to avoid pre-emptive registration lockouts
+- [x] Add dynamic transporter re-verification on the health check endpoint
+- [x] Restart and verify local dev environment functionality
+
+
+

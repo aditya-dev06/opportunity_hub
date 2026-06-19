@@ -7,6 +7,8 @@ import VITBhopalGuide from './components/VITBhopalGuide';
 import CampusLife from './components/CampusLife';
 import Auth from './components/Auth';
 import RotatingText from './components/RotatingText';
+import TermsAndConditions from './components/TermsAndConditions';
+import PrivacyPolicy from './components/PrivacyPolicy';
 
 // Default Initial Skills Database
 const INITIAL_SKILLS = [
@@ -227,6 +229,8 @@ function App() {
   const [clubs, setClubs] = useState([]);
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+
+
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
@@ -545,6 +549,14 @@ function App() {
         );
     }
   };
+
+  // Handle client-side routing for legal compliance documents
+  if (window.location.pathname === '/terms') {
+    return <TermsAndConditions />;
+  }
+  if (window.location.pathname === '/privacy') {
+    return <PrivacyPolicy />;
+  }
 
   // If loading user profile, show brief loading screen
   if (token && loading && !user) {

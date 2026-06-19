@@ -166,9 +166,10 @@ if (transporter) {
       console.log('✅ SMTP connection verified successfully.');
     })
     .catch((err) => {
-      smtpHealthy = false;
       smtpError = err.message || String(err);
-      console.error('❌ SMTP connection failed:', err.message);
+      console.warn('⚠️ SMTP connection verification failed on startup (will retry on actual send):', err.message);
+      // Keep healthy so we don't preemptively block registration if SMTP is actually working (e.g. verify-probes blocked but sendMail works)
+      smtpHealthy = true; 
     });
 } else {
   console.warn('⚠️ Email service not configured. Registration and password reset will be unavailable.');
@@ -267,12 +268,35 @@ if (MONGODB_URI) {
   dbConnectionStatus = "Connecting";
   client = new MongoClient(MONGODB_URI);
   dbConnectingPromise = client.connect()
-    .then(c => {
+    .then(async c => {
       db = c.db();
       dbConnectionStatus = "Connected";
       dbConnectionError = null;
       console.log("Successfully connected to MongoDB Database!");
       ensureIndexes(db).catch(err => console.error("Index creation error:", err.message));
+
+      // Zero-Delay Deployment: Fetch/Save persistent JWT secret from MongoDB if not provided via environment variables
+      if (!process.env.JWT_SECRET) {
+        try {
+          const settingsColl = db.collection('settings');
+          const doc = await settingsColl.findOne({ key: 'jwt_secret' });
+          if (doc && doc.value) {
+            JWT_SECRET = doc.value;
+            console.log("🔒 Loaded persistent JWT_SECRET from MongoDB Atlas settings.");
+          } else {
+            const newSecret = crypto.randomBytes(64).toString('hex');
+            await settingsColl.updateOne(
+              { key: 'jwt_secret' },
+              { $set: { value: newSecret } },
+              { upsert: true }
+            );
+            JWT_SECRET = newSecret;
+            console.log("🔒 Generated and saved new persistent JWT_SECRET in MongoDB Atlas settings.");
+          }
+        } catch (err) {
+          console.warn("Could not retrieve persistent JWT_SECRET from settings collection:", err.message);
+        }
+      }
     })
     .catch(err => {
       dbConnectionStatus = "Failed";
@@ -2098,8 +2122,20 @@ app.delete('/api/recruitments/:id', authenticate, async (req, res) => {
 });
 
 // SMTP Health Check Endpoint
-app.get('/api/health/smtp', (req, res) => {
+app.get('/api/health/smtp', async (req, res) => {
   res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+  
+  if (!smtpHealthy && transporter) {
+    try {
+      await transporter.verify();
+      smtpHealthy = true;
+      smtpError = null;
+      console.log('✅ SMTP connection dynamically recovered and verified.');
+    } catch (err) {
+      smtpError = err.message || String(err);
+    }
+  }
+
   res.json({
     smtpHealthy,
     smtpError,

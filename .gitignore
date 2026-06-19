@@ -35,7 +35,11 @@ server/data/secret.key
 server/data/*.key
 server/data/admin_config.json
 server/uploads/
+server/data/activity_logs.json
+server/data/activity_logs*.json
 .env
 .env.*
+
+
 
 
