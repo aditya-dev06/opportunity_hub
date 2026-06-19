@@ -68,7 +68,7 @@ const PrivacyPolicy = () => {
           fontSize: '0.9rem',
           lineHeight: '1.5'
         }}>
-          <strong>🇮🇳 India DPDP Act 2023 Compliance Notice:</strong> By checking the consent box during registration, you provide free, specific, informed, unconditional, and unambiguous consent to process your personal data for academic tracking, club involvement, and event registration on VITHON.
+          <strong>🇮🇳 India DPDP Act 2023 Compliance Notice:</strong> By checking the consent box during registration, you provide free, specific, informed, unconditional, and unambiguous consent to process your personal data for academic tracking, club involvement, and event registration on VIT Life.
         </div>
 
         {/* Section 1 */}

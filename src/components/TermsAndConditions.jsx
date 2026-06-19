@@ -61,7 +61,7 @@ const TermsAndConditions = () => {
         {/* Introduction */}
         <section style={{ marginBottom: '2rem' }}>
           <p style={{ lineHeight: 1.6, fontSize: '0.95rem' }}>
-            Welcome to <strong>VITHON</strong> (referred to as the "Platform", "Service", "we", "us", or "our"). VITHON is an academic roadmap tracker, student community hub, and events engagement network designed for members of the VIT Bhopal University.
+            Welcome to <strong>VIT Life</strong> (referred to as the "Platform", "Service", "we", "us", or "our"). VIT Life is an academic roadmap tracker, student community hub, and events engagement network designed for members of the VIT Bhopal University.
           </p>
           <p style={{ lineHeight: 1.6, fontSize: '0.95rem', color: 'hsl(var(--text-muted))' }}>
             By registering for an account, accessing, or using the Platform, you acknowledge that you have read, understood, and agree to be bound by these Terms & Conditions, the Privacy Policy, and all applicable local, national, and international laws, including the <strong>Indian Information Technology Act, 2000</strong> and the <strong>Digital Personal Data Protection Act, 2023 (DPDP Act)</strong>.
@@ -111,10 +111,10 @@ const TermsAndConditions = () => {
           </h2>
           <ul style={{ paddingLeft: '1.25rem', margin: 0, lineHeight: 1.6, fontSize: '0.92rem' }}>
             <li style={{ marginBottom: '0.5rem' }}>
-              <strong>Platform Content:</strong> The design, layout, logo, code, graphics, interactive roadmaps, and content provided by VITHON are the property of VITHON and its developers and are protected under Indian and international copyright laws.
+              <strong>Platform Content:</strong> The design, layout, logo, code, graphics, interactive roadmaps, and content provided by VIT Life are the property of VIT Life and its developers and are protected under Indian and international copyright laws.
             </li>
             <li style={{ marginBottom: '0.5rem' }}>
-              <strong>User Content:</strong> When uploading event posters, descriptions, club recruiter profiles, or project details, you grant VITHON a non-exclusive, worldwide, royalty-free license to display, host, and distribute that material solely for purposes relevant to the Platform's operations.
+              <strong>User Content:</strong> When uploading event posters, descriptions, club recruiter profiles, or project details, you grant VIT Life a non-exclusive, worldwide, royalty-free license to display, host, and distribute that material solely for purposes relevant to the Platform's operations.
             </li>
           </ul>
         </section>
@@ -125,10 +125,10 @@ const TermsAndConditions = () => {
             4. Limitation of Liability and Disclaimers
           </h2>
           <p style={{ lineHeight: 1.6, fontSize: '0.92rem' }}>
-            The Platform is provided on an "AS IS" and "AS AVAILABLE" basis without any express or implied warranties. VITHON acts as an intermediary network for students and student-run clubs. We do not guarantee the completeness, accuracy, or safety of student-created events, roadmaps, external resources, or scraper-aggregated opportunities.
+            The Platform is provided on an "AS IS" and "AS AVAILABLE" basis without any express or implied warranties. VIT Life acts as an intermediary network for students and student-run clubs. We do not guarantee the completeness, accuracy, or safety of student-created events, roadmaps, external resources, or scraper-aggregated opportunities.
           </p>
           <p style={{ lineHeight: 1.6, fontSize: '0.92rem', color: 'hsl(var(--text-muted))' }}>
-            Under no circumstances shall VITHON, its developer team, or VIT Bhopal University be held liable for any direct, indirect, incidental, special, consequential, or punitive damages arising from your use of, or inability to use, the platform.
+            Under no circumstances shall VIT Life, its developer team, or VIT Bhopal University be held liable for any direct, indirect, incidental, special, consequential, or punitive damages arising from your use of, or inability to use, the platform.
           </p>
         </section>
 
