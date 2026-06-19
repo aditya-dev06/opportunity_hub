@@ -522,9 +522,9 @@ function DashboardEventCardItem({
         flexDirection: 'column',
         position: 'relative',
         opacity: opacity,
-        transition: 'opacity 0.3s ease, box-shadow 0.3s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), width 0.3s ease',
-        border: event.pinned ? '1px solid hsla(var(--primary) / 0.5)' : '1px solid hsla(var(--border-glass))',
-        boxShadow: event.pinned ? '0 0 15px hsla(var(--primary) / 0.15)' : 'none',
+        '--cat-color': catColor,
+        border: event.pinned ? '1px solid hsla(var(--primary) / 0.5)' : undefined,
+        boxShadow: event.pinned ? '0 0 15px hsla(var(--primary) / 0.15)' : undefined,
         width: showBounce ? '280px' : cardWidth
       }}
     >
@@ -542,15 +542,10 @@ function DashboardEventCardItem({
       )}
 
       {/* Status Badge */}
-      <div style={{
-        position: 'absolute', top: '0.75rem', right: '0.75rem',
-        background: `hsla(${badge.bg}, 0.15)`,
-        border: `1px solid hsla(${badge.color}, 0.4)`,
-        color: `hsl(${badge.color})`,
-        fontSize: '0.62rem', fontWeight: 700,
-        padding: '0.2rem 0.45rem', borderRadius: '4px', zIndex: 5,
-        textTransform: 'uppercase', letterSpacing: '0.03em'
-      }}>
+      <div 
+        className={`status-badge ${status.replace('_', '-')}`}
+        style={{ position: 'absolute', top: '0.75rem', right: '0.75rem', zIndex: 5 }}
+      >
         {badge.text}
       </div>
 

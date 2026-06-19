@@ -13,14 +13,14 @@ const eventTransformStyles = [
 
 const CATEGORIES = [
   { key: 'all', label: 'All', icon: '🌟' },
-  { key: 'tech', label: 'Tech', icon: '🖥️', color: '180, 80%, 55%' },
-  { key: 'music', label: 'Music & Arts', icon: '🎵', color: '280, 70%, 60%' },
-  { key: 'speakers', label: 'Speakers', icon: '🎤', color: '30, 90%, 55%' },
-  { key: 'motivation', label: 'Social & Motivation', icon: '💡', color: '140, 60%, 50%' },
-  { key: 'anime', label: 'Anime', icon: '🎌', color: '330, 75%, 60%' },
-  { key: 'cultural', label: 'Cultural', icon: '🎭', color: '345, 80%, 60%' },
-  { key: 'robotics', label: 'Robotics', icon: '🤖', color: '220, 75%, 55%' },
-  { key: 'sports', label: 'Sports', icon: '🏅', color: '50, 85%, 55%' },
+  { key: 'tech', label: 'Tech', icon: '🖥️', color: '180, 75%, 52%' },
+  { key: 'music', label: 'Music & Arts', icon: '🎵', color: '275, 75%, 64%' },
+  { key: 'speakers', label: 'Speakers', icon: '🎤', color: '28, 80%, 56%' },
+  { key: 'motivation', label: 'Social & Motivation', icon: '💡', color: '145, 60%, 50%' },
+  { key: 'anime', label: 'Anime', icon: '🎌', color: '335, 80%, 64%' },
+  { key: 'cultural', label: 'Cultural', icon: '🎭', color: '350, 75%, 60%' },
+  { key: 'robotics', label: 'Robotics', icon: '🤖', color: '215, 85%, 60%' },
+  { key: 'sports', label: 'Sports', icon: '🏅', color: '42, 80%, 54%' },
 ];
 
 function getCategoryColor(categoryKey) {
@@ -213,14 +213,13 @@ function EventCardItem({
         cursor: 'pointer',
         position: 'relative',
         opacity: opacity,
-        transition: 'opacity 0.3s ease, box-shadow 0.3s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), width 0.3s ease',
+        '--cat-color': catColor,
         border: isOngoingSection 
           ? 'none' 
-          : (event.pinned ? '1px solid hsla(var(--primary) / 0.5)' : '1px solid hsla(var(--border-glass))'),
+          : (event.pinned ? '1px solid hsla(var(--primary) / 0.5)' : undefined),
         boxShadow: isOngoingSection
           ? 'none'
-          : (event.pinned ? '0 0 15px hsla(var(--primary) / 0.15)' : 'none'),
-        animation: 'none',
+          : (event.pinned ? '0 0 15px hsla(var(--primary) / 0.15)' : undefined),
         width: isMasonry ? '100%' : (showBounce ? '280px' : cardWidth),
         height: isMasonry ? '100%' : 'auto',
         display: 'flex',
@@ -229,13 +228,10 @@ function EventCardItem({
     >
       {/* Absolute Badges */}
       {isOngoingSection ? (
-        <div style={{
-          position: 'absolute', top: '0.75rem', left: '0.75rem',
-          background: 'linear-gradient(135deg, hsl(210, 80%, 55%), hsl(190, 80%, 50%))',
-          color: 'white', fontSize: '0.65rem', fontWeight: 800,
-          padding: '0.25rem 0.5rem', borderRadius: '4px', zIndex: 5,
-          textTransform: 'uppercase', letterSpacing: '0.05em'
-        }}>
+        <div 
+          className="status-badge ongoing"
+          style={{ position: 'absolute', top: '0.75rem', left: '0.75rem', zIndex: 5 }}
+        >
           🔵 Happening Now
         </div>
       ) : (
@@ -251,15 +247,10 @@ function EventCardItem({
               📌 Featured
             </div>
           )}
-          <div style={{
-            position: 'absolute', top: '0.75rem', right: '0.75rem',
-            background: `hsla(${badge.bg}, 0.15)`,
-            border: `1px solid hsla(${badge.color}, 0.4)`,
-            color: `hsl(${badge.color})`,
-            fontSize: '0.62rem', fontWeight: 700,
-            padding: '0.2rem 0.45rem', borderRadius: '4px', zIndex: 5,
-            textTransform: 'uppercase', letterSpacing: '0.03em'
-          }}>
+          <div 
+            className={`status-badge ${status.replace('_', '-')}`}
+            style={{ position: 'absolute', top: '0.75rem', right: '0.75rem', zIndex: 5 }}
+          >
             {badge.text}
           </div>
         </>
@@ -1002,7 +993,7 @@ export default function CampusLife({ user, token, clubs = [], events = [], fetch
           {CATEGORIES.map(cat => (
             <button
               key={cat.key}
-              className={`category-chip ${selectedCategory === cat.key ? 'active' : ''}`}
+              className={`category-chip cat-${cat.key} ${selectedCategory === cat.key ? 'active' : ''}`}
               style={cat.color ? { '--cat-color': cat.color } : {}}
               onClick={() => setSelectedCategory(cat.key)}
             >

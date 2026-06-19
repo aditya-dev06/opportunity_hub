@@ -634,41 +634,46 @@ function App() {
           </ul>
         </nav>
 
+        <div className="sidebar-status">
+          <div className="status-dot"></div>
+          <span>Sync Status: Active</span>
+        </div>
+
         <div className="sidebar-footer">
-          <div className="user-profile" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '0.5rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', width: '100%' }}>
+          <div className="user-profile-capsule">
+            <div className="user-profile">
               <div className="avatar">
                 {user && user.name ? user.name.substring(0, 2).toUpperCase() : 'DS'}
               </div>
-              <div className="user-info" style={{ overflow: 'hidden', textOverflow: 'ellipsis', width: 'calc(100% - 50px)' }}>
-                <div className="name" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{user ? user.name : 'CDS Student'}</span>
-                  {user && (
-                    <button
-                      onClick={() => setShowEditProfile(true)}
-                      style={{
-                        background: 'none', border: 'none', cursor: 'pointer',
-                        fontSize: '0.8rem', padding: '0.1rem', display: 'inline-flex',
-                        alignSelf: 'center', color: 'rgba(255,255,255,0.7)', transition: 'color 0.2s'
-                      }}
-                      title="Edit Profile"
-                      onMouseEnter={(e) => e.target.style.color = '#fff'}
-                      onMouseLeave={(e) => e.target.style.color = 'rgba(255,255,255,0.7)'}
-                    >
-                      ✏️
-                    </button>
-                  )}
+              <div className="user-info">
+                <div className="name" title={user ? user.name : 'CDS Student'}>
+                  {user ? user.name : 'CDS Student'}
                 </div>
-                <div className="college" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)' }}>
+                <div className="college">
                   {user && user.isVitBhopal 
                     ? `${getRegNumber()} • Sem ${user.semester || 1}` 
-                    : (user && user.semester && user.semester !== 0 ? `Global Student • Sem ${user.semester}` : 'Global Member')}
+                    : (user && user.semester && user.semester !== 0 ? `Sem ${user.semester}` : 'Global')}
                 </div>
               </div>
             </div>
-            <button className="btn-logout" onClick={handleLogout}>
-              🚪 Log Out
-            </button>
+            <div className="profile-actions">
+              {user && (
+                <button 
+                  className="profile-btn" 
+                  onClick={() => setShowEditProfile(true)}
+                  title="Edit Profile"
+                >
+                  ⚙️
+                </button>
+              )}
+              <button 
+                className="profile-btn" 
+                onClick={handleLogout}
+                title="Log Out"
+              >
+                🚪
+              </button>
+            </div>
           </div>
         </div>
       </aside>
