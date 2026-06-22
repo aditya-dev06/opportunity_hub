@@ -1,5 +1,5 @@
-const CACHE_NAME = 'cds-hub-static-cache-v1';
-const API_CACHE_NAME = 'cds-hub-api-cache-v1';
+const CACHE_NAME = 'cds-hub-static-cache-v2';
+const API_CACHE_NAME = 'cds-hub-api-cache-v2';
 
 const STATIC_ASSETS = [
   '/',
@@ -37,6 +37,11 @@ self.addEventListener('activate', event => {
 
 // Fetch Event
 self.addEventListener('fetch', event => {
+  // Only intercept and cache GET requests
+  if (event.request.method !== 'GET') {
+    return;
+  }
+
   const requestUrl = new URL(event.request.url);
 
   // Handle Backend API JSON requests
