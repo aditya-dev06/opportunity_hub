@@ -11,6 +11,7 @@ import multer from 'multer';
 import nodemailer from 'nodemailer';
 import dns from 'dns';
 import { rateLimit } from 'express-rate-limit';
+import { v2 as cloudinary } from 'cloudinary';
 
 // Force Node.js to prefer IPv4 over IPv6 to resolve connection unreachable errors on IPv4-only networks
 dns.setDefaultResultOrder('ipv4first');
@@ -153,6 +154,43 @@ const upload = multer({
     }
   }
 });
+
+// Configure Cloudinary if credentials are provided in process.env
+const isCloudinaryConfigured = 
+  process.env.CLOUDINARY_CLOUD_NAME && 
+  process.env.CLOUDINARY_API_KEY && 
+  process.env.CLOUDINARY_API_SECRET;
+
+if (isCloudinaryConfigured) {
+  cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+  });
+  console.log("☁️ Cloudinary configured successfully.");
+} else {
+  console.log("⚠️ Cloudinary credentials missing. File uploads will fallback to local disk/database storage.");
+}
+
+// Upload buffer helper for Cloudinary
+const uploadToCloudinary = (fileBuffer, folder = 'vitlife_events') => {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      {
+        folder,
+        resource_type: 'auto'
+      },
+      (error, result) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(result.secure_url);
+        }
+      }
+    );
+    stream.end(fileBuffer);
+  });
+};
 
 // Email Configuration (SMTP Transporter)
 const smtpHost = process.env.SMTP_HOST;
@@ -2406,6 +2444,17 @@ app.post('/api/upload', authenticate, requireClubManager, (req, res) => {
     }
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded.' });
+    }
+
+    // Try Cloudinary upload if configured
+    if (isCloudinaryConfigured) {
+      try {
+        const cloudinaryUrl = await uploadToCloudinary(req.file.buffer);
+        console.log("☁️ Successfully uploaded file to Cloudinary:", cloudinaryUrl);
+        return res.json({ success: true, url: cloudinaryUrl });
+      } catch (cloudErr) {
+        console.error("☁️ Cloudinary upload failed, falling back to local/database storage:", cloudErr);
+      }
     }
 
     const uniqueName = `${Date.now()}-${Math.round(Math.random() * 1E9)}${path.extname(req.file.originalname)}`;
