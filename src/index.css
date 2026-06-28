@@ -3066,25 +3066,79 @@ input, textarea, select {
   box-shadow: 0 0 0 3px rgba(99, 91, 255, 0.08), 0 0 20px rgba(99, 91, 255, 0.05);
 }
 
-/* Forgot link inside password field */
-.aurora-forgot-link {
+/* Password field specific right padding for the eye toggle */
+.floating-field.password-field .floating-input {
+  padding-right: 2.8rem !important;
+}
+
+/* Password Eye Toggle Icon */
+.aurora-password-toggle {
   position: absolute;
   top: 50%;
   right: 1rem;
   transform: translateY(-50%);
   background: none;
   border: none;
-  color: rgba(129, 140, 248, 0.7);
-  font-family: var(--font-accent, 'Inter', sans-serif);
-  font-size: 0.75rem;
-  font-weight: 600;
+  color: rgba(255, 255, 255, 0.4);
   cursor: pointer;
-  padding: 0.2rem 0;
-  transition: color 0.2s;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s, transform 0.2s;
+  z-index: 10;
 }
 
-.aurora-forgot-link:hover {
-  color: #818cf8;
+.aurora-password-toggle:hover {
+  color: rgba(255, 255, 255, 0.85);
+  transform: translateY(-50%) scale(1.05);
+}
+
+.aurora-password-toggle:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+:root.light-theme .aurora-password-toggle {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+:root.light-theme .aurora-password-toggle:hover {
+  color: rgba(0, 0, 0, 0.85);
+}
+
+/* Standalone Forgot Password container and link */
+.aurora-forgot-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -0.5rem;
+  margin-bottom: 1.25rem;
+  padding: 0 0.25rem;
+}
+
+.aurora-forgot-link-standalone {
+  background: none;
+  border: none;
+  color: rgba(129, 140, 248, 0.75);
+  font-family: var(--font-accent, 'Inter', sans-serif);
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0.2rem 0;
+  transition: color 0.2s, text-shadow 0.2s;
+}
+
+.aurora-forgot-link-standalone:hover {
+  color: #a5b4fc;
+  text-shadow: 0 0 8px rgba(165, 180, 252, 0.45);
+}
+
+:root.light-theme .aurora-forgot-link-standalone {
+  color: #4f46e5;
+}
+
+:root.light-theme .aurora-forgot-link-standalone:hover {
+  color: #312e81;
+  text-shadow: none;
 }
 
 /* ── Select ── */

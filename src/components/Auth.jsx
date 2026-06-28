@@ -157,13 +157,16 @@ const ParticleField = ({ theme }) => {
    ═══════════════════════════════════════════════════════════════ */
 const FloatingInput = ({ label, type = 'text', value, onChange, required, id, children, ...rest }) => {
   const [focused, setFocused] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const active = focused || (value && value.length > 0);
 
+  const inputType = type === 'password' && showPassword ? 'text' : type;
+
   return (
-    <div className={`floating-field ${active ? 'active' : ''} ${focused ? 'focused' : ''}`}>
+    <div className={`floating-field ${active ? 'active' : ''} ${focused ? 'focused' : ''} ${type === 'password' ? 'password-field' : ''}`}>
       <input
         id={id}
-        type={type}
+        type={inputType}
         value={value}
         onChange={onChange}
         onFocus={() => setFocused(true)}
@@ -175,6 +178,31 @@ const FloatingInput = ({ label, type = 'text', value, onChange, required, id, ch
       />
       <label htmlFor={id} className="floating-label">{label}</label>
       <div className="floating-bar" />
+      {type === 'password' && (
+        <button
+          type="button"
+          className="aurora-password-toggle"
+          onClick={() => setShowPassword(!showPassword)}
+          tabIndex="-1"
+          aria-label={showPassword ? 'Hide password' : 'Show password'}
+        >
+          {showPassword ? (
+            /* Eye closed */
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
+              <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" />
+              <path d="M6.61 6.61A13.52 13.52 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" />
+              <line x1="2" y1="2" x2="22" y2="22" />
+            </svg>
+          ) : (
+            /* Eye open */
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+          )}
+        </button>
+      )}
       {children}
     </div>
   );
@@ -937,15 +965,17 @@ const Auth = ({ onLoginSuccess, theme, setTheme }) => {
               <>
                 <FloatingInput id="login-email" label="Email Address" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
 
-                <FloatingInput id="login-password" label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required>
+                <FloatingInput id="login-password" label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+
+                <div className="aurora-forgot-container">
                   <button
                     type="button"
-                    className="aurora-forgot-link"
+                    className="aurora-forgot-link-standalone"
                     onClick={() => { setAuthState('forgot'); setError(''); setSuccessMessage(''); }}
                   >
-                    Forgot?
+                    Forgot Password?
                   </button>
-                </FloatingInput>
+                </div>
 
                 <button type="submit" className="aurora-submit-btn" disabled={loading}>
                   {loading ? <span className="aurora-spinner" /> : 'Sign In'}
