@@ -1903,7 +1903,7 @@ input, textarea, select {
 /* Event Cards */
 .event-card {
   overflow: hidden;
-  transition: var(--transition-smooth);
+  transition: var(--transition-spring) !important;
   padding: 0;
 }
 
@@ -1913,9 +1913,11 @@ input, textarea, select {
 }
 
 .event-card:hover {
-  transform: translateY(-1.5px) translateZ(0);
-  border-color: hsla(var(--cat-color, var(--primary)) / 0.3) !important;
-  box-shadow: 0 12px 25px -10px hsla(var(--cat-color, var(--primary)) / 0.22), 0 0 0 1px hsla(var(--cat-color, var(--primary)) / 0.1);
+  transform: translateY(-5px) scale(1.01) translateZ(0);
+  border-color: hsla(var(--cat-color, var(--primary)) / 0.5) !important;
+  box-shadow: 
+    0 20px 35px -12px hsla(var(--cat-color, var(--primary)) / 0.25), 
+    0 0 0 1px hsla(var(--cat-color, var(--primary)) / 0.2) !important;
 }
 
 .event-poster {
