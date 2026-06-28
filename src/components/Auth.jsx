@@ -1,5 +1,258 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import TypewriterText from './TypewriterText';
+
+/* ═══════════════════════════════════════════════════════════════
+   PARTICLE CONSTELLATION CANVAS — Interactive starfield background
+   ═══════════════════════════════════════════════════════════════ */
+const ParticleCanvas = () => {
+  const canvasRef = useRef(null);
+  const mouseRef = useRef({ x: -1000, y: -1000 });
+  const particlesRef = useRef([]);
+  const animFrameRef = useRef(null);
+
+  const initParticles = useCallback((w, h) => {
+    const count = Math.min(Math.floor((w * h) / 8000), 120);
+    const particles = [];
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        r: Math.random() * 2 + 0.5,
+        opacity: Math.random() * 0.5 + 0.2,
+        pulseSpeed: Math.random() * 0.02 + 0.005,
+        pulsePhase: Math.random() * Math.PI * 2,
+      });
+    }
+    particlesRef.current = particles;
+  }, []);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let w = canvas.parentElement.offsetWidth;
+    let h = canvas.parentElement.offsetHeight;
+    canvas.width = w;
+    canvas.height = h;
+    initParticles(w, h);
+
+    const handleResize = () => {
+      w = canvas.parentElement.offsetWidth;
+      h = canvas.parentElement.offsetHeight;
+      canvas.width = w;
+      canvas.height = h;
+      initParticles(w, h);
+    };
+
+    const handleMouseMove = (e) => {
+      const rect = canvas.getBoundingClientRect();
+      mouseRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    };
+
+    const handleMouseLeave = () => {
+      mouseRef.current = { x: -1000, y: -1000 };
+    };
+
+    window.addEventListener('resize', handleResize);
+    canvas.addEventListener('mousemove', handleMouseMove);
+    canvas.addEventListener('mouseleave', handleMouseLeave);
+
+    let time = 0;
+    const draw = () => {
+      time += 1;
+      ctx.clearRect(0, 0, w, h);
+      const particles = particlesRef.current;
+      const mouse = mouseRef.current;
+
+      // Update & draw particles
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // Wrap around edges
+        if (p.x < 0) p.x = w;
+        if (p.x > w) p.x = 0;
+        if (p.y < 0) p.y = h;
+        if (p.y > h) p.y = 0;
+
+        // Mouse repulsion
+        const dx = p.x - mouse.x;
+        const dy = p.y - mouse.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 120) {
+          const force = (120 - dist) / 120;
+          p.x += (dx / dist) * force * 2;
+          p.y += (dy / dist) * force * 2;
+        }
+
+        // Pulse opacity
+        const pulse = Math.sin(time * p.pulseSpeed + p.pulsePhase) * 0.3 + 0.7;
+        const alpha = p.opacity * pulse;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(147, 130, 255, ${alpha})`;
+        ctx.fill();
+
+        // Connect nearby particles with lines
+        for (let j = i + 1; j < particles.length; j++) {
+          const p2 = particles[j];
+          const lx = p.x - p2.x;
+          const ly = p.y - p2.y;
+          const ld = Math.sqrt(lx * lx + ly * ly);
+          if (ld < 140) {
+            const lineAlpha = (1 - ld / 140) * 0.15;
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = `rgba(147, 130, 255, ${lineAlpha})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Mouse glow
+      if (mouse.x > 0 && mouse.y > 0) {
+        const grad = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 150);
+        grad.addColorStop(0, 'rgba(99, 91, 255, 0.08)');
+        grad.addColorStop(1, 'rgba(99, 91, 255, 0)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(mouse.x - 150, mouse.y - 150, 300, 300);
+      }
+
+      animFrameRef.current = requestAnimationFrame(draw);
+    };
+
+    draw();
+
+    return () => {
+      cancelAnimationFrame(animFrameRef.current);
+      window.removeEventListener('resize', handleResize);
+      canvas.removeEventListener('mousemove', handleMouseMove);
+      canvas.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, [initParticles]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 1 }}
+    />
+  );
+};
+
+/* ═══════════════════════════════════════════════════════════════
+   ANIMATED HERO PANEL — Staggered reveals + floating feature cards
+   ═══════════════════════════════════════════════════════════════ */
+const HERO_FEATURES = [
+  { icon: '📅', label: 'Events', desc: 'Campus happenings' },
+  { icon: '🎯', label: 'Roadmap', desc: 'Skill progression' },
+  { icon: '🏫', label: 'Campus', desc: 'Student life' },
+  { icon: '⏰', label: 'Timetable', desc: 'Class schedules' },
+];
+
+const AnimatedHeroPanel = () => {
+  return (
+    <div className="auth-hero-panel">
+      <ParticleCanvas />
+      <div className="auth-floating-orb auth-orb-1" />
+      <div className="auth-floating-orb auth-orb-2" />
+      <div className="auth-floating-orb auth-orb-3" />
+      <div className="auth-hero-grid" />
+
+      <div className="auth-hero-content">
+        {/* Staggered letter-by-letter brand reveal */}
+        <motion.div
+          className="auth-hero-brand"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        >
+          {'VIT'.split('').map((char, i) => (
+            <motion.span
+              key={`vit-${i}`}
+              initial={{ opacity: 0, y: 40, rotateX: -90 }}
+              animate={{ opacity: 1, y: 0, rotateX: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 + i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+              style={{ display: 'inline-block' }}
+            >
+              {char}
+            </motion.span>
+          ))}
+          <motion.span
+            initial={{ opacity: 0, scale: 0.5, y: 30 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            style={{ display: 'block' }}
+          >
+            {'LIFE'.split('').map((char, i) => (
+              <motion.span
+                key={`life-${i}`}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.6 + i * 0.06, ease: [0.16, 1, 0.3, 1] }}
+                style={{ display: 'inline-block' }}
+              >
+                {char}
+              </motion.span>
+            ))}
+          </motion.span>
+        </motion.div>
+
+        {/* Tagline with line reveal */}
+        <motion.p
+          className="auth-hero-tagline"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 1.0, ease: 'easeOut' }}
+        >
+          Your Campus. Your Journey. One Platform.
+        </motion.p>
+
+        {/* Description fade in */}
+        <motion.p
+          className="auth-hero-description"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 1.3 }}
+        >
+          The centralized lifestyle & management portal built for VIT Bhopal students — events, timetables, opportunities, and more.
+        </motion.p>
+
+        {/* Feature cards with staggered float-in */}
+        <div className="auth-hero-features">
+          {HERO_FEATURES.map((feat, i) => (
+            <motion.div
+              key={feat.label}
+              className="auth-hero-feature"
+              initial={{ opacity: 0, y: 40, scale: 0.8 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{
+                duration: 0.5,
+                delay: 1.5 + i * 0.12,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              whileHover={{
+                y: -8,
+                scale: 1.08,
+                transition: { duration: 0.25 },
+              }}
+            >
+              <span className="auth-hero-feature-icon">{feat.icon}</span>
+              <span className="auth-hero-feature-label">{feat.label}</span>
+              <span className="auth-hero-feature-desc">{feat.desc}</span>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const COURSES_LIST = [
   { code: 'DSA', name: 'Data Structures & Algorithms' },
@@ -793,83 +1046,202 @@ const Auth = ({ onLoginSuccess }) => {
     }
   };
 
+  // 3D Card Tilt States
+  const [tiltX, setTiltX] = useState(0);
+  const [tiltY, setTiltY] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+
+  // Spotlight Background Coordinates
+  const [spotlightPos, setSpotlightPos] = useState({ x: 0, y: 0 });
+  const formPanelRef = useRef(null);
+
+  const handleMouseMove = (e) => {
+    // 1. Calculate spotlight position
+    if (formPanelRef.current) {
+      const rect = formPanelRef.current.getBoundingClientRect();
+      setSpotlightPos({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      });
+    }
+
+    // 2. Calculate card tilt (only for desktop / hover state)
+    const cardElement = e.currentTarget.querySelector('.auth-card');
+    if (cardElement && window.innerWidth >= 769) {
+      const rect = cardElement.getBoundingClientRect();
+      const width = rect.width;
+      const height = rect.height;
+      const mouseX = e.clientX - rect.left - width / 2;
+      const mouseY = e.clientY - rect.top - height / 2;
+      
+      // Calculate rotation angles (max 12 degrees)
+      const rX = -(mouseY / height) * 12;
+      const rY = (mouseX / width) * 12;
+      
+      setTiltX(rX);
+      setTiltY(rY);
+    }
+  };
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    setTiltX(0);
+    setTiltY(0);
+  };
+
   return (
     <div className="auth-wrapper">
-      <div className="glass-panel auth-card">
-        <div className="auth-brand">
-          <div className="auth-logo" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.1rem' }}>
-            <span className="logo-gradient-text">VIT</span>
-            <TypewriterText
-              words={isVitBhopal ? ['LIFE', 'BHOPAL'] : ['BHOPAL']}
-              className="auth-rotating-text"
-            />
-          </div>
-          <div className="auth-subtitle">
-            VIT Life - College Lifestyle & Management
-          </div>
-        </div>
+      {/* ── Left Hero Panel (Desktop Only — hidden via CSS on mobile) ── */}
+      <AnimatedHeroPanel />
 
-        {smtpDown && (
-          <div style={{
-            background: 'linear-gradient(135deg, hsla(35, 90%, 55%, 0.15), hsla(0, 80%, 55%, 0.12))',
-            border: '1px solid hsla(35, 90%, 55%, 0.4)',
-            borderRadius: '12px',
-            padding: '1rem 1.25rem',
-            marginBottom: '1.25rem',
-            display: 'flex',
-            alignItems: 'flex-start',
-            gap: '0.75rem'
-          }}>
-            <span style={{ fontSize: '1.5rem', flexShrink: 0 }}>🔧</span>
-            <div>
-              <div style={{ fontWeight: 700, color: 'hsl(35, 90%, 60%)', fontSize: '0.9rem', marginBottom: '0.25rem' }}>
-                Maintenance Notice
+      {/* ── Right Form Panel (With interactive spotlight background) ── */}
+      <div 
+        ref={formPanelRef}
+        className="auth-form-panel"
+        onMouseMove={handleMouseMove}
+        style={{
+          '--spotlight-x': `${spotlightPos.x}px`,
+          '--spotlight-y': `${spotlightPos.y}px`
+        }}
+      >
+        {/* Dynamic spot glow following cursor */}
+        <div className="auth-spotlight-glow" />
+
+        {/* 3D Tilt Card wrapper */}
+        <div
+          className="auth-card-tilt-container"
+          onMouseMove={handleMouseMove}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          <motion.div
+            className="glass-panel auth-card"
+            style={{
+              transform: isHovered && window.innerWidth >= 769
+                ? `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale3d(1.01, 1.01, 1.01)`
+                : 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)',
+              transition: isHovered ? 'transform 0.1s ease-out' : 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)'
+            }}
+            initial={{ opacity: 0, x: 50, scale: 0.95 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {/* Card inner glass reflection highlight */}
+            <div className="auth-card-reflection" />
+
+            <div className="auth-brand" style={{ transform: 'translateZ(30px)' }}>
+              <div className="auth-logo" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.1rem' }}>
+                <span className="logo-gradient-text">VIT</span>
+                <TypewriterText
+                  words={isVitBhopal ? ['LIFE', 'BHOPAL'] : ['BHOPAL']}
+                  className="auth-rotating-text"
+                />
               </div>
-              <div style={{ fontSize: '0.82rem', color: 'hsl(var(--text-secondary))', lineHeight: 1.4 }}>
-                New registrations and password resets are temporarily unavailable. Existing users can still sign in normally.
+              <div className="auth-subtitle">
+                VIT Life - College Lifestyle & Management
               </div>
             </div>
-          </div>
-        )}
 
-        {(authState === 'login' || authState === 'signup') && (
-          <div className="auth-tabs">
-            <button 
-              className={`auth-tab ${authState === 'login' ? 'active' : ''}`}
-              onClick={() => { setAuthState('login'); setError(''); setSuccessMessage(''); }}
-            >
-              Sign In
-            </button>
-            <button 
-              className={`auth-tab ${authState === 'signup' ? 'active' : ''}`}
-              onClick={() => { setAuthState('signup'); setError(''); setSuccessMessage(''); }}
-            >
-              Create Account
-            </button>
-          </div>
-        )}
+            {smtpDown && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+                style={{
+                  background: 'linear-gradient(135deg, hsla(35, 90%, 55%, 0.15), hsla(0, 80%, 55%, 0.12))',
+                  border: '1px solid hsla(35, 90%, 55%, 0.4)',
+                  borderRadius: '12px',
+                  padding: '1rem 1.25rem',
+                  marginBottom: '1.25rem',
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: '0.75rem',
+                  transform: 'translateZ(10px)'
+                }}
+              >
+                <span style={{ fontSize: '1.5rem', flexShrink: 0 }}>🔧</span>
+                <div>
+                  <div style={{ fontWeight: 700, color: 'hsl(35, 90%, 60%)', fontSize: '0.9rem', marginBottom: '0.25rem' }}>
+                    Maintenance Notice
+                  </div>
+                  <div style={{ fontSize: '0.82rem', color: 'hsl(var(--text-secondary))', lineHeight: 1.4 }}>
+                    New registrations and password resets are temporarily unavailable. Existing users can still sign in normally.
+                  </div>
+                </div>
+              </motion.div>
+            )}
 
-        {(authState === 'verify' || authState === 'forgot' || authState === 'reset') && (
-          <div style={{
-            textAlign: 'center',
-            marginBottom: '1.5rem',
-            color: 'hsl(var(--text-primary))',
-            fontFamily: 'var(--font-heading)',
-            fontSize: '1.25rem',
-            fontWeight: '700',
-            textTransform: 'uppercase',
-            letterSpacing: '0.05em',
-            background: 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)))',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent'
-          }}>
-            {authState === 'verify' && 'Verify Your Email'}
-            {authState === 'forgot' && 'Reset Password Request'}
-            {authState === 'reset' && 'Set New Password'}
-          </div>
-        )}
+            {(authState === 'login' || authState === 'signup') && (
+              <div className="auth-tabs" style={{ transform: 'translateZ(20px)' }}>
+                {/* Sliding active pill indicator background */}
+                <div 
+                  className="auth-tab-pill-bg" 
+                  style={{
+                    transform: `translateX(${authState === 'signup' ? '100%' : '0%'})`,
+                    transition: 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
+                  }}
+                />
+                <button 
+                  className={`auth-tab ${authState === 'login' ? 'active' : ''}`}
+                  onClick={() => { setAuthState('login'); setError(''); setSuccessMessage(''); }}
+                  style={{ background: 'transparent', boxShadow: 'none' }}
+                >
+                  Sign In
+                </button>
+                <button 
+                  className={`auth-tab ${authState === 'signup' ? 'active' : ''}`}
+                  onClick={() => { setAuthState('signup'); setError(''); setSuccessMessage(''); }}
+                  style={{ background: 'transparent', boxShadow: 'none' }}
+                >
+                  Create Account
+                </button>
+              </div>
+            )}
 
-        {renderForm()}
+            {(authState === 'verify' || authState === 'forgot' || authState === 'reset') && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.4 }}
+                style={{
+                  textAlign: 'center',
+                  marginBottom: '1.5rem',
+                  color: 'hsl(var(--text-primary))',
+                  fontFamily: 'var(--font-heading)',
+                  fontSize: '1.25rem',
+                  fontWeight: '700',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  background: 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)))',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  transform: 'translateZ(20px)'
+                }}
+              >
+                {authState === 'verify' && 'Verify Your Email'}
+                {authState === 'forgot' && 'Reset Password Request'}
+                {authState === 'reset' && 'Set New Password'}
+              </motion.div>
+            )}
+
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={authState}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
+                style={{ transform: 'translateZ(15px)' }}
+              >
+                {renderForm()}
+              </motion.div>
+            </AnimatePresence>
+          </motion.div>
+        </div>
       </div>
     </div>
   );
