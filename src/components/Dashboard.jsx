@@ -726,10 +726,211 @@ function DashboardEventCardItem({
   );
 }
 
+const MESS_MENUS = {
+  mayuri: {
+    name: 'Mayuri Mess',
+    menu: {
+      1: {
+        breakfast: { time: '07:30 - 09:30', items: 'Poori Masala, Tea/Coffee, Banana, Omelette' },
+        lunch: { time: '12:30 - 14:30', items: 'Veg Biryani, Dal Fry, Roti, Rice, Veg Raita, Salad' },
+        snacks: { time: '16:30 - 17:30', items: 'Samosa, Mint Chutney, Tea/Coffee' },
+        dinner: { time: '19:30 - 21:30', items: 'Paneer Tikka Masala, Dal Makhani, Roti, Pulao, Gulab Jamun' }
+      },
+      2: {
+        breakfast: { time: '07:30 - 09:30', items: 'Idli Wada, Coconut Chutney, Sambhar, Milk, Tea' },
+        lunch: { time: '12:30 - 14:30', items: 'Kadhai Paneer, Yellow Dal, Chapati, Rice, Curd, Pickle' },
+        snacks: { time: '16:30 - 17:30', items: 'Vada Pav, Sweet Chutney, Tea/Coffee' },
+        dinner: { time: '19:30 - 21:30', items: 'Chicken Curry / Veg Kofta, Dal Tadka, Steam Rice, Custard' }
+      },
+      3: {
+        breakfast: { time: '07:30 - 09:30', items: 'Poha, Jalebi, Sev, Sprouts, Tea/Coffee' },
+        lunch: { time: '12:30 - 14:30', items: 'Rajma Chawal, Mix Veg Sabji, Tandoori Roti, Salad' },
+        snacks: { time: '16:30 - 17:30', items: 'Dhokla, Green Chutney, Tea' },
+        dinner: { time: '19:30 - 21:30', items: 'Kadhai Paneer, Butter Naan, Rice, Dal Makhani, Vanilla Ice Cream' }
+      },
+      4: {
+        breakfast: { time: '07:30 - 09:30', items: 'Aloo Paratha, Fresh Curd, Pickle, Butter/Jam, Tea' },
+        lunch: { time: '12:30 - 14:30', items: 'Chole Bhature, Veg Pulao, Curd, Papad, Onion Salad' },
+        snacks: { time: '16:30 - 17:30', items: 'Veg Cutlet, Tomato Sauce, Tea/Coffee' },
+        dinner: { time: '19:30 - 21:30', items: 'Chicken Masala / Shahi Paneer, Dal Fry, Jeera Rice, Chapati, Kheer' }
+      },
+      5: {
+        breakfast: { time: '07:30 - 09:30', items: 'Masala Dosa, Sambhar, Tomato Chutney, Milk, Tea' },
+        lunch: { time: '12:30 - 14:30', items: 'Aloo Gobi Matar, Dal Tadka, Rice, Chapati, Boondi Raita' },
+        snacks: { time: '16:30 - 17:30', items: 'Kachori, Sweet Chutney, Tea' },
+        dinner: { time: '19:30 - 21:30', items: 'Egg Curry / Kadhai Paneer, Dal Fry, Pulao, Butter Roti, Rasgulla' }
+      },
+      6: {
+        breakfast: { time: '07:30 - 09:30', items: 'Veg Sandwich, French Fries, Sauce, Milk, Tea' },
+        lunch: { time: '12:30 - 14:30', items: 'Kadhi Khichdi, Bhindi Fry, Papad, Curd, Salad' },
+        snacks: { time: '16:30 - 17:30', items: 'Aloo Bonda, Green Chutney, Tea/Coffee' },
+        dinner: { time: '19:30 - 21:30', items: 'Paneer Bhurji, Dal Lasoni, Rice, Chapati, Fruit Salad' }
+      },
+      0: {
+        breakfast: { time: '07:30 - 09:30', items: 'Uttapam, Coconut Chutney, Sambhar, Fruit, Tea/Coffee' },
+        lunch: { time: '12:30 - 14:30', items: 'Special Veg Thali (Paneer, Dal Makhani, Rice, Poori, Sweet)' },
+        snacks: { time: '16:30 - 17:30', items: 'Samosa Chat, Tea/Coffee' },
+        dinner: { time: '19:30 - 21:30', items: 'Chicken Curry / Kadhai Paneer, Dal Makhani, Pulao, Roti, Chocolate Ice Cream' }
+      }
+    }
+  },
+  crcl: {
+    name: 'CRCL Mess (Block 1)',
+    menu: {
+      1: {
+        breakfast: { time: '07:30 - 09:30', items: 'Aloo Paratha, Curd, Pickle, Butter/Jam, Tea/Coffee' },
+        lunch: { time: '12:30 - 14:30', items: 'Rajma Masala, Aloo Jeera, Plain Rice, Chapati, Raita, Salad' },
+        snacks: { time: '16:30 - 17:30', items: 'Samosa, Green Chutney, Tea/Coffee' },
+        dinner: { time: '19:30 - 21:30', items: 'Egg Curry / Paneer Kadhai, Dal Tadka, Jeera Rice, Roti, Kheer' }
+      },
+      2: {
+        breakfast: { time: '07:30 - 09:30', items: 'Poha, Jalebi, Sev, Sprouts, Milk, Tea/Coffee' },
+        lunch: { time: '12:30 - 14:30', items: 'Chole Bhature, Veg Pulao, Curd, Onion Salad, Pickle' },
+        snacks: { time: '16:30 - 17:30', items: 'Veg Cutlet, Tomato Ketchup, Tea' },
+        dinner: { time: '19:30 - 21:30', items: 'Kadhi Pakoda, Aloo Gobi, Steam Rice, Chapati, Custard' }
+      },
+      3: {
+        breakfast: { time: '07:30 - 09:30', items: 'Idli, Wada, Sambhar, Coconut Chutney, Milk, Tea/Coffee' },
+        lunch: { time: '12:30 - 14:30', items: 'Chicken Biryani / Paneer Biryani, Veg Gravy, Raita, Salad' },
+        snacks: { time: '16:30 - 17:30', items: 'Pav Bhaji, Lemon, Tea/Coffee' },
+        dinner: { time: '19:30 - 21:30', items: 'Mix Veg, Dal Fry, Jeera Rice, Chapati, Gulab Jamun' }
+      },
+      4: {
+        breakfast: { time: '07:30 - 09:30', items: 'Methi Paratha, Tomato Chutney, Boiled Egg/Banana, Tea/Coffee' },
+        lunch: { time: '12:30 - 14:30', items: 'Kashmiri Dum Aloo, Dal Makhani, Rice, Chapati, Curd' },
+        snacks: { time: '16:30 - 17:30', items: 'Dhokla, Chutney, Tea/Coffee' },
+        dinner: { time: '19:30 - 21:30', items: 'Soyabean Masala, Lauki Kofta, Rice, Chapati, Ice Cream' }
+      },
+      5: {
+        breakfast: { time: '07:30 - 09:30', items: 'Masala Dosa, Sambhar, Chutney, Fruit, Tea/Coffee' },
+        lunch: { time: '12:30 - 14:30', items: 'Aloo Gobi Matar, Dal Tadka, Rice, Chapati, Boondi Raita' },
+        snacks: { time: '16:30 - 17:30', items: 'Kachori, Sweet Chutney, Tea' },
+        dinner: { time: '19:30 - 21:30', items: 'Butter Chicken / Shahi Paneer, Dal Fry, Pulao, Butter Roti, Rasgulla' }
+      },
+      6: {
+        breakfast: { time: '07:30 - 09:30', items: 'Veg Sandwich, French Fries, Sauce, Milk, Tea/Coffee' },
+        lunch: { time: '12:30 - 14:30', items: 'Kadhi Khichdi, Bhindi Fry, Papad, Curd, Salad' },
+        snacks: { time: '16:30 - 17:30', items: 'Aloo Bonda, Green Chutney, Tea' },
+        dinner: { time: '19:30 - 21:30', items: 'Paneer Bhurji, Dal Lasoni, Rice, Chapati, Fruit Salad' }
+      },
+      0: {
+        breakfast: { time: '07:30 - 09:30', items: 'Uttapam, Coconut Chutney, Sambhar, Sprouts, Tea/Coffee' },
+        lunch: { time: '12:30 - 14:30', items: 'Special Veg Thali (Paneer, Dal, Rice, Puri, Sweet)' },
+        snacks: { time: '16:30 - 17:30', items: 'Samosa Chat, Tea/Coffee' },
+        dinner: { time: '19:30 - 21:30', items: 'Chicken Curry / Shahi Paneer, Dal Makhani, Pulao, Roti, Ice Cream' }
+      }
+    }
+  },
+  jmb: {
+    name: 'JMB (Jain) Mess',
+    menu: {
+      1: {
+        breakfast: { time: '07:30 - 09:30', items: 'Jain Poha, Banana, Milk, Tea/Coffee' },
+        lunch: { time: '12:30 - 14:30', items: 'Gobi Jeera, Jain Dal, Rice, Chapati, Curd, Salad' },
+        snacks: { time: '16:30 - 17:30', items: 'Samosa (No onion/garlic), Tea/Coffee' },
+        dinner: { time: '19:30 - 21:30', items: 'Jain Paneer Butter Masala, Dal Tadka, Rice, Roti, Gulab Jamun' }
+      },
+      2: {
+        breakfast: { time: '07:30 - 09:30', items: 'Jain Paratha (Banana stuffing), Curd, Butter/Jam, Tea' },
+        lunch: { time: '12:30 - 14:30', items: 'Jain Kadhi Khichdi, Bhindi Fry, Papad, Curd' },
+        snacks: { time: '16:30 - 17:30', items: 'Dhokla, Green Chutney, Tea' },
+        dinner: { time: '19:30 - 21:30', items: 'Jain Mix Veg Sabji, Dal Fry, Roti, Rice, Kheer' }
+      },
+      3: {
+        breakfast: { time: '07:30 - 09:30', items: 'Jain Idli Sambhar, Coconut Chutney, Tea/Coffee' },
+        lunch: { time: '12:30 - 14:30', items: 'Jain Veg Biryani, Veg Gravy, Raita, Salad' },
+        snacks: { time: '16:30 - 17:30', items: 'Jain Vada Pav (Banana patty), Tea/Coffee' },
+        dinner: { time: '19:30 - 21:30', items: 'Jain Shahi Paneer, Roti, Rice, Dal Makhani, Custard' }
+      },
+      4: {
+        breakfast: { time: '07:30 - 09:30', items: 'Jain Poha Jalebi, Sprouts, Milk, Tea' },
+        lunch: { time: '12:30 - 14:30', items: 'Jain Chole Puri, Veg Pulao, Curd, Papad' },
+        snacks: { time: '16:30 - 17:30', items: 'Sweet Corn, Tomato Sauce, Tea/Coffee' },
+        dinner: { time: '19:30 - 21:30', items: 'Jain Kadhai Paneer, Dal Makhani, Rice, Roti, Sweet' }
+      },
+      5: {
+        breakfast: { time: '07:30 - 09:30', items: 'Jain Masala Dosa, Sambhar, Chutney, Fruit, Tea/Coffee' },
+        lunch: { time: '12:30 - 14:30', items: 'Jain Rajma, Cabbage Fry, Steam Rice, Chapati, Boondi Raita' },
+        snacks: { time: '16:30 - 17:30', items: 'Jain Kachori, Sweet Chutney, Tea' },
+        dinner: { time: '19:30 - 21:30', items: 'Jain Shahi Paneer, Dal Fry, Jeera Rice, Chapati, Rasgulla' }
+      },
+      6: {
+        breakfast: { time: '07:30 - 09:30', items: 'Jain Veg Sandwich, French Fries, Sauce, Tea/Coffee' },
+        lunch: { time: '12:30 - 14:30', items: 'Jain Dal Baati Churma, Curd, Salad, Papad' },
+        snacks: { time: '16:30 - 17:30', items: 'Jain Bonda (Banana filling), Tea' },
+        dinner: { time: '19:30 - 21:30', items: 'Jain Paneer Pasanda, Dal Fry, Rice, Chapati, Fruit Salad' }
+      },
+      0: {
+        breakfast: { time: '07:30 - 09:30', items: 'Jain Uttapam, Coconut Chutney, Sprouts, Milk, Tea' },
+        lunch: { time: '12:30 - 14:30', items: 'Special Jain Thali (Paneer Gravy, Yellow Dal, Pulao, Poori, Sweet)' },
+        snacks: { time: '16:30 - 17:30', items: 'Jain Samosa Chat, Tea/Coffee' },
+        dinner: { time: '19:30 - 21:30', items: 'Jain Shahi Paneer, Dal Makhani, Rice, Chapati, Ice Cream' }
+      }
+    }
+  },
+  safal: {
+    name: 'Safal Mess',
+    menu: {
+      1: {
+        breakfast: { time: '07:30 - 09:30', items: 'Poori Aloo Sabji, Milk, Fruit, Tea/Coffee' },
+        lunch: { time: '12:30 - 14:30', items: 'Dal Fry, Gobi Masala, Steam Rice, Chapati, Raita' },
+        snacks: { time: '16:30 - 17:30', items: 'Veg Roll, Tomato Ketchup, Tea' },
+        dinner: { time: '19:30 - 21:30', items: 'Chicken Curry / Shahi Paneer, Dal Makhani, Rice, Roti, Kheer' }
+      },
+      2: {
+        breakfast: { time: '07:30 - 09:30', items: 'Poha Jalebi, Sprouts, Milk, Tea/Coffee' },
+        lunch: { time: '12:30 - 14:30', items: 'Rajma Chawal, Bhindi Masala, Chapati, Salad, Papad' },
+        snacks: { time: '16:30 - 17:30', items: 'Aloo Pakoda, Mint Chutney, Tea' },
+        dinner: { time: '19:30 - 21:30', items: 'Egg Masala / Kadhai Paneer, Dal Tadka, Steam Rice, Custard' }
+      },
+      3: {
+        breakfast: { time: '07:30 - 09:30', items: 'Masala Dosa, Sambhar, Chutney, Tea/Coffee' },
+        lunch: { time: '12:30 - 14:30', items: 'Veg Biryani, Paneer Butter Masala, Raita, Salad' },
+        snacks: { time: '16:30 - 17:30', items: 'Samosa, Sweet Chutney, Tea' },
+        dinner: { time: '19:30 - 21:30', items: 'Chicken Tikka Masala / Shahi Paneer, Jeera Rice, Naan, Ice Cream' }
+      },
+      4: {
+        breakfast: { time: '07:30 - 09:30', items: 'Bread Omelette / Toast, Banana, Milk, Tea' },
+        lunch: { time: '12:30 - 14:30', items: 'Dum Aloo, Dal Fry, Steam Rice, Chapati, Salad, Pickle' },
+        snacks: { time: '16:30 - 17:30', items: 'Kachori, Sweet Chutney, Tea/Coffee' },
+        dinner: { time: '19:30 - 21:30', items: 'Paneer Bhurji, Dal Lasoni, Rice, Chapati, Rasgulla' }
+      },
+      5: {
+        breakfast: { time: '07:30 - 09:30', items: 'Idli Wada, Sambhar, Coconut Chutney, Tea/Coffee' },
+        lunch: { time: '12:30 - 14:30', items: 'Chole Bhature, Pulao, Curd, Papad, Salad' },
+        snacks: { time: '16:30 - 17:30', items: 'Pav Bhaji, Lemon, Tea/Coffee' },
+        dinner: { time: '19:30 - 21:30', items: 'Chicken Curry / Kadhai Paneer, Dal Makhani, Rice, Roti, Sweets' }
+      },
+      6: {
+        breakfast: { time: '07:30 - 09:30', items: 'Veg Sandwich, French Fries, Milk, Tea/Coffee' },
+        lunch: { time: '12:30 - 14:30', items: 'Kadhi Pakoda, Rice, Roti, Jeera Aloo, Curd' },
+        snacks: { time: '16:30 - 17:30', items: 'Bread Pakoda, Sauce, Tea/Coffee' },
+        dinner: { time: '19:30 - 21:30', items: 'Paneer Kadhai, Dal Makhani, Pulao, Butter Roti, Ice Cream' }
+      },
+      0: {
+        breakfast: { time: '07:30 - 09:30', items: 'Aloo Paratha, Curd, Sprouts, Fruit, Tea/Coffee' },
+        lunch: { time: '12:30 - 14:30', items: 'Chicken Biryani / Paneer Biryani, Veg Gravy, Salad, Sweet' },
+        snacks: { time: '16:30 - 17:30', items: 'Veg Sandwich, Tomato Ketchup, Tea' },
+        dinner: { time: '19:30 - 21:30', items: 'Egg Curry / Veg Kofta, Dal Fry, Steam Rice, Chapati, Ice Cream' }
+      }
+    }
+  }
+};
+
 const Dashboard = ({ stats, user, opportunities, onNavigate, onUpdateSemester, clubs = [], events = [], fetchEvents, token, theme, onNavigateToEvent }) => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isMobileDevice, setIsMobileDevice] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
+  
+  const [selectedMess, setSelectedMess] = useState(() => {
+    return localStorage.getItem('ds_selected_mess') || 'mayuri';
+  });
+
+  const handleMessChange = (e) => {
+    const value = e.target.value;
+    setSelectedMess(value);
+    localStorage.setItem('ds_selected_mess', value);
+  };
 
   // Tinder Stack State
   const [currentStackIndex, setCurrentStackIndex] = useState(0);
@@ -823,6 +1024,64 @@ const Dashboard = ({ stats, user, opportunities, onNavigate, onUpdateSemester, c
     }, 15000); // Check every 15 seconds to ensure quick updates
     return () => clearInterval(timer);
   }, []);
+
+  const getUpcomingMealInfo = () => {
+    const hours = currentTime.getHours();
+    const minutes = currentTime.getMinutes();
+    const currentMinutes = hours * 60 + minutes;
+    const currentDay = currentTime.getDay(); // 0-6
+
+    let mealType = 'breakfast';
+    let label = 'Breakfast';
+    let isTomorrow = false;
+    let targetDay = currentDay;
+    let isServingNow = false;
+
+    if (currentMinutes <= 570) {
+      mealType = 'breakfast';
+      label = 'Breakfast';
+      isServingNow = currentMinutes >= 450;
+    } else if (currentMinutes <= 870) {
+      mealType = 'lunch';
+      label = 'Lunch';
+      isServingNow = currentMinutes >= 750;
+    } else if (currentMinutes <= 1050) {
+      mealType = 'snacks';
+      label = 'Snacks';
+      isServingNow = currentMinutes >= 990;
+    } else if (currentMinutes <= 1290) {
+      mealType = 'dinner';
+      label = 'Dinner';
+      isServingNow = currentMinutes >= 1170;
+    } else {
+      mealType = 'breakfast';
+      label = 'Breakfast';
+      isTomorrow = true;
+      targetDay = (currentDay + 1) % 7;
+    }
+
+    const messData = MESS_MENUS[selectedMess] || MESS_MENUS.mayuri;
+    const dayMenu = messData.menu[targetDay] || messData.menu[1];
+    const meal = dayMenu[mealType];
+
+    const mealIcons = {
+      breakfast: '🥞',
+      lunch: '🍛',
+      snacks: '☕',
+      dinner: '🍽️'
+    };
+
+    return {
+      mealType,
+      label,
+      isTomorrow,
+      isServingNow,
+      icon: mealIcons[mealType] || '🍽️',
+      items: meal ? meal.items : 'No menu data available',
+      timeStr: meal ? meal.time : '00:00 - 00:00',
+      messName: messData.name
+    };
+  };
 
   const getLiveClassInfo = () => {
     if (!user || !user.timetable || user.timetable.length === 0) {
@@ -956,144 +1215,259 @@ const Dashboard = ({ stats, user, opportunities, onNavigate, onUpdateSemester, c
     return { status: 'idle' };
   };
 
+  const getTrackerStatusClass = (status) => {
+    switch (status) {
+      case 'ongoing': return 'ongoing';
+      case 'upcoming_today': return 'upcoming';
+      case 'subsequent_days': return 'holiday';
+      case 'no_timetable': return 'setup';
+      default: return 'holiday';
+    }
+  };
+
   const renderLiveClassTracker = () => {
     const info = getLiveClassInfo();
+    const statusClass = getTrackerStatusClass(info.status);
 
-    if (info.status === 'no_timetable') {
+    const renderMessTrackerSection = () => {
+      const mealInfo = getUpcomingMealInfo();
       return (
-        <div className="bento-item span-2 live-tracker-item live-tracker-panel setup">
-          <div className="tracker-content-setup">
-            <div className="setup-icon">📅</div>
-            <div className="setup-text">
-              <h3>Track Your Class Schedule Live</h3>
-              <p>
-                Upload your VTOP timetable screenshot once to automatically trace your active classes, display remaining time, and navigate classrooms easily.
-              </p>
+        <div className="mess-tracker-section" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', height: '100%', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span className={`tracker-status-badge ${mealInfo.isServingNow ? 'serving-now' : 'up-next'}`} style={{ 
+              color: mealInfo.isServingNow ? '#10b981' : 'hsl(var(--secondary))',
+              background: mealInfo.isServingNow ? 'rgba(16, 185, 129, 0.1)' : 'hsla(var(--secondary) / 0.1)',
+              padding: '0.2rem 0.6rem',
+              borderRadius: '12px',
+              fontSize: '0.65rem',
+              fontWeight: 800,
+              letterSpacing: '0.05em'
+            }}>
+              {mealInfo.isServingNow ? '🟢 SERVING NOW' : '⏳ UP NEXT'}
+            </span>
+            <select 
+              value={selectedMess} 
+              onChange={handleMessChange}
+              className="mess-select-dropdown"
+              style={{
+                background: 'hsla(var(--bg-card) / 0.5)',
+                border: '1px solid hsla(var(--border-glass))',
+                color: 'hsl(var(--text-primary))',
+                fontSize: '0.7rem',
+                fontWeight: 700,
+                padding: '0.2rem 0.4rem',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                outline: 'none'
+              }}
+            >
+              <option value="mayuri">Mayuri Mess</option>
+              <option value="crcl">CRCL (Block 1)</option>
+              <option value="jmb">JMB (Jain)</option>
+              <option value="safal">Safal Mess</option>
+            </select>
+          </div>
+
+          <div className="mess-meal-main" style={{ marginTop: '0.15rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.25rem' }}>
+              <span style={{ fontSize: '1.25rem' }}>{mealInfo.icon}</span>
+              <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'hsl(var(--text-muted))', fontWeight: 700, letterSpacing: '0.05em' }}>
+                {mealInfo.label} {mealInfo.isTomorrow && '(Tomorrow)'}
+              </span>
             </div>
-            <button className="btn-primary" onClick={() => onNavigate('timetable')}>
+            <p className="mess-meal-items" style={{ 
+              fontSize: '0.85rem', 
+              fontWeight: 600, 
+              color: 'hsl(var(--text-primary))', 
+              lineHeight: 1.4,
+              margin: 0,
+              display: '-webkit-box',
+              WebkitLineClamp: 3,
+              WebkitBoxOrient: 'vertical',
+              overflow: 'hidden'
+            }}>
+              {mealInfo.items}
+            </p>
+          </div>
+
+          <div className="mess-meal-footer" style={{ 
+            fontSize: '0.65rem', 
+            color: 'hsl(var(--text-muted))', 
+            borderTop: '1px solid rgba(255, 255, 255, 0.05)', 
+            paddingTop: '0.5rem',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}>
+            <span>🕒 Hours: {mealInfo.timeStr}</span>
+            <span style={{ fontWeight: 600 }}>📍 {MESS_MENUS[selectedMess].name}</span>
+          </div>
+        </div>
+      );
+    };
+
+    const renderClassTrackerSection = () => {
+      if (info.status === 'no_timetable') {
+        return (
+          <div className="tracker-content-setup" style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', justifyContent: 'center', height: '100%' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+              <span style={{ fontSize: '1.75rem' }}>📅</span>
+              <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 700 }}>Track Your Class Schedule Live</h3>
+            </div>
+            <p style={{ margin: 0, fontSize: '0.8rem', color: 'hsl(var(--text-muted))', lineHeight: 1.35 }}>
+              Upload your VTOP timetable screenshot once to automatically trace your active classes, display remaining time, and navigate classrooms easily.
+            </p>
+            <button className="btn-primary" onClick={() => onNavigate('timetable')} style={{ width: 'fit-content', marginTop: '0.35rem', padding: '0.4rem 0.8rem', fontSize: '0.75rem' }}>
               Set Up Timetable
             </button>
           </div>
-        </div>
-      );
-    }
+        );
+      }
 
-    if (info.status === 'ongoing') {
-      const classTypeLabel = info.currentClass.type === 'LT' ? 'Lecture (Theory)' 
-        : info.currentClass.type === 'LTP' ? 'Theory + Tutorial + Practical'
-        : info.currentClass.type === 'LP' ? 'Lab Practical' : 'Tutorial';
+      if (info.status === 'ongoing') {
+        const classTypeLabel = info.currentClass.type === 'LT' ? 'Lecture' 
+          : info.currentClass.type === 'LTP' ? 'Theory + Tut + Prac'
+          : info.currentClass.type === 'LP' ? 'Lab Practical' : 'Tutorial';
 
-      return (
-        <div className="bento-item span-2 live-tracker-item live-tracker-panel ongoing">
-          <div className="tracker-header">
-            <span className="tracker-status-badge">
-              <span className="pulse-dot"></span>
-              ONGOING CLASS
-            </span>
-            <button className="tracker-manage-btn" onClick={() => onNavigate('timetable')}>
-              Manage Schedule
-            </button>
-          </div>
-          
-          <div className="tracker-content">
-            <div className="tracker-main-info">
-              <span className="tracker-slot">Slot {info.currentClass.slot}</span>
-              <h2 className="tracker-course-code">{info.currentClass.courseCode}</h2>
-              <div className="tracker-room-type">
-                <span>📍 Room: {info.currentClass.room}</span>
-                <span>•</span>
-                <span>{classTypeLabel}</span>
+        return (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', height: '100%', justifyContent: 'space-between' }}>
+            <div className="tracker-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span className="tracker-status-badge" style={{ color: 'hsl(var(--primary))' }}>
+                <span className="pulse-dot"></span>
+                ONGOING CLASS
+              </span>
+              <button className="tracker-manage-btn" onClick={() => onNavigate('timetable')}>
+                Manage
+              </button>
+            </div>
+            
+            <div className="tracker-content" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <div className="tracker-main-info">
+                <span className="tracker-slot" style={{ fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase', color: 'hsl(var(--primary))', background: 'hsla(var(--primary) / 0.1)', padding: '0.1rem 0.35rem', borderRadius: '4px' }}>Slot {info.currentClass.slot}</span>
+                <h2 className="tracker-course-code" style={{ margin: '0.2rem 0 0.1rem 0', fontSize: '1.3rem', fontWeight: 800, fontFamily: 'var(--font-heading)' }}>{info.currentClass.courseCode}</h2>
+                <div className="tracker-room-type" style={{ fontSize: '0.75rem', color: 'hsl(var(--text-muted))', display: 'flex', gap: '0.35rem', alignItems: 'center' }}>
+                  <span>📍 Room: {info.currentClass.room}</span>
+                  <span>•</span>
+                  <span>{classTypeLabel}</span>
+                </div>
+              </div>
+              
+              <div className="tracker-time-progress">
+                <div className="tracker-time-row" style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', marginBottom: '0.15rem' }}>
+                  <span>🕒 {info.currentClass.start} - {info.currentClass.end}</span>
+                  <span className="tracker-time-remaining" style={{ fontWeight: 600 }}>
+                    {info.remainingMinutes}m remaining
+                  </span>
+                </div>
+                <div className="tracker-progress-bar-bg" style={{ height: '6px', background: 'rgba(255, 255, 255, 0.08)', borderRadius: '3px', overflow: 'hidden' }}>
+                  <div className="tracker-progress-bar-fill" style={{ width: `${info.progress}%`, height: '100%', background: 'linear-gradient(90deg, hsl(var(--primary)), hsl(var(--secondary)))', borderRadius: '3px' }}></div>
+                </div>
               </div>
             </div>
             
-            <div className="tracker-time-progress">
-              <div className="tracker-time-row">
-                <span>🕒 {info.currentClass.start} - {info.currentClass.end}</span>
-                <span className="tracker-time-remaining">
-                  {info.remainingMinutes} min{info.remainingMinutes > 1 ? 's' : ''} remaining
-                </span>
+            {info.nextClass && (
+              <div className="tracker-footer" style={{ fontSize: '0.7rem', color: 'hsl(var(--text-muted))', borderTop: '1px solid rgba(255, 255, 255, 0.05)', paddingTop: '0.4rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                <span>NEXT: </span>
+                <strong>{info.nextClass.courseCode}</strong>
+                <span> ({info.nextClass.slot}) at {info.nextClass.start} in {info.nextClass.room}</span>
               </div>
-              <div className="tracker-progress-bar-bg">
-                <div className="tracker-progress-bar-fill" style={{ width: `${info.progress}%` }}></div>
-              </div>
-            </div>
+            )}
           </div>
-          
-          {info.nextClass && (
-            <div className="tracker-footer">
-              <span>NEXT CLASS: </span>
-              <strong>{info.nextClass.courseCode}</strong>
-              <span> ({info.nextClass.slot}) at {info.nextClass.start} in Room {info.nextClass.room}</span>
-            </div>
-          )}
-        </div>
-      );
-    }
+        );
+      }
 
-    if (info.status === 'upcoming_today') {
-      const classTypeLabel = info.nextClass.type === 'LT' ? 'Lecture (Theory)' 
-        : info.nextClass.type === 'LTP' ? 'Theory + Tutorial + Practical'
-        : info.nextClass.type === 'LP' ? 'Lab Practical' : 'Tutorial';
+      if (info.status === 'upcoming_today') {
+        const classTypeLabel = info.nextClass.type === 'LT' ? 'Lecture' 
+          : info.nextClass.type === 'LTP' ? 'Theory + Tut + Prac'
+          : info.nextClass.type === 'LP' ? 'Lab Practical' : 'Tutorial';
 
-      return (
-        <div className="bento-item span-2 live-tracker-item live-tracker-panel upcoming">
-          <div className="tracker-header">
-            <span className="tracker-status-badge upcoming">
-              ⏳ UPCOMING CLASS TODAY
-            </span>
-            <button className="tracker-manage-btn" onClick={() => onNavigate('timetable')}>
-              Manage Schedule
-            </button>
-          </div>
-          
-          <div className="tracker-content">
-            <div className="tracker-main-info">
-              <span className="tracker-slot">Slot {info.nextClass.slot}</span>
-              <h2 className="tracker-course-code">{info.nextClass.courseCode}</h2>
-              <div className="tracker-room-type">
-                <span>📍 Room: {info.nextClass.room}</span>
-                <span>•</span>
-                <span>{classTypeLabel}</span>
-              </div>
+        return (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', height: '100%', justifyContent: 'space-between' }}>
+            <div className="tracker-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span className="tracker-status-badge upcoming" style={{ color: 'hsl(var(--secondary))' }}>
+                ⏳ UPCOMING CLASS
+              </span>
+              <button className="tracker-manage-btn" onClick={() => onNavigate('timetable')}>
+                Manage
+              </button>
             </div>
             
-            <div className="tracker-time-countdown">
-              <span className="countdown-number">starts in {info.waitMinutes} mins</span>
-              <span className="countdown-time">at {info.nextClass.start}</span>
+            <div className="tracker-content" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <div className="tracker-main-info">
+                <span className="tracker-slot" style={{ fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase', color: 'hsl(var(--secondary))', background: 'hsla(var(--secondary) / 0.1)', padding: '0.1rem 0.35rem', borderRadius: '4px' }}>Slot {info.nextClass.slot}</span>
+                <h2 className="tracker-course-code" style={{ margin: '0.2rem 0 0.1rem 0', fontSize: '1.3rem', fontWeight: 800, fontFamily: 'var(--font-heading)' }}>{info.nextClass.courseCode}</h2>
+                <div className="tracker-room-type" style={{ fontSize: '0.75rem', color: 'hsl(var(--text-muted))', display: 'flex', gap: '0.35rem', alignItems: 'center' }}>
+                  <span>📍 Room: {info.nextClass.room}</span>
+                  <span>•</span>
+                  <span>{classTypeLabel}</span>
+                </div>
+              </div>
+              
+              <div className="tracker-time-countdown" style={{ fontSize: '0.85rem', display: 'flex', flexDirection: 'column', gap: '0.1rem' }}>
+                <span className="countdown-number" style={{ fontWeight: 700, color: 'hsl(var(--secondary))' }}>starts in {info.waitMinutes} mins</span>
+                <span className="countdown-time" style={{ fontSize: '0.7rem', color: 'hsl(var(--text-muted))' }}>at {info.nextClass.start}</span>
+              </div>
             </div>
           </div>
-        </div>
-      );
-    }
+        );
+      }
 
-    if (info.status === 'subsequent_days') {
-      return (
-        <div className="bento-item span-2 live-tracker-item live-tracker-panel holiday">
-          <div className="tracker-header">
-            <span className="tracker-status-badge free-day">
-              🌴 NO MORE CLASSES TODAY
-            </span>
-            <button className="tracker-manage-btn" onClick={() => onNavigate('timetable')}>
-              Manage Schedule
-            </button>
-          </div>
-          
-          <div className="tracker-content-holiday">
-            <div className="holiday-text">
-              <h3>All classes completed for today!</h3>
-              <p>
-                Next scheduled class is <strong>{info.nextClass.courseCode}</strong> (Slot {info.nextClass.slot}) on <strong>{info.nextDayName}</strong> at <strong>{info.nextClass.start}</strong> in Room <strong>{info.nextClass.room}</strong>.
+      if (info.status === 'subsequent_days') {
+        return (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', height: '100%', justifyContent: 'space-between' }}>
+            <div className="tracker-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span className="tracker-status-badge free-day" style={{ color: '#10b981' }}>
+                🌴 CLASSES DONE TODAY
+              </span>
+              <button className="tracker-manage-btn" onClick={() => onNavigate('timetable')}>
+                Manage
+              </button>
+            </div>
+            
+            <div className="tracker-content-holiday" style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+              <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700 }}>All classes completed for today!</h3>
+              <p style={{ margin: 0, fontSize: '0.75rem', color: 'hsl(var(--text-muted))', lineHeight: 1.35 }}>
+                Next: <strong>{info.nextClass.courseCode}</strong> (Slot {info.nextClass.slot}) on <strong>{info.nextDayName}</strong> at <strong>{info.nextClass.start}</strong> in {info.nextClass.room}.
               </p>
             </div>
-            <button className="btn-secondary" onClick={() => onNavigate('timetable')} style={{ flexShrink: 0 }}>
-              View Schedule
-            </button>
           </div>
+        );
+      }
+
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', justifyContent: 'center', height: '100%' }}>
+          <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700 }}>No classes scheduled</h3>
+          <p style={{ margin: 0, fontSize: '0.75rem', color: 'hsl(var(--text-muted))' }}>Enjoy your day!</p>
         </div>
       );
-    }
+    };
 
-    return null;
+    return (
+      <div className={`bento-item span-2 live-tracker-item live-tracker-panel ${statusClass}`}>
+        <div style={{ 
+          display: 'flex', 
+          flexDirection: isMobileDevice ? 'column' : 'row', 
+          gap: isMobileDevice ? '1.5rem' : '2rem', 
+          width: '100%' 
+        }}>
+          {/* Left Side: Class Alert */}
+          <div className="class-tracker-section" style={{ flex: 1 }}>
+            {renderClassTrackerSection()}
+          </div>
+
+          {/* Right Side: Mess Tracker */}
+          <div className="mess-tracker-section" style={{ 
+            width: isMobileDevice ? '100%' : '40%', 
+            borderLeft: isMobileDevice ? 'none' : '1px solid rgba(255, 255, 255, 0.08)',
+            borderTop: isMobileDevice ? '1px solid rgba(255, 255, 255, 0.08)' : 'none',
+            paddingLeft: isMobileDevice ? 0 : '1.5rem',
+            paddingTop: isMobileDevice ? '1.25rem' : 0,
+          }}>
+            {renderMessTrackerSection()}
+          </div>
+        </div>
+      </div>
+    );
   };
 
   const renderProfileStatsWidget = () => {
