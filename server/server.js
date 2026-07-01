@@ -556,12 +556,12 @@ if (isCloudinaryConfigured) {
 }
 
 // Upload buffer helper for Cloudinary
-const uploadToCloudinary = (fileBuffer, folder = 'vitlife_events') => {
+const uploadToCloudinary = (fileBuffer, folder = 'vitlife_events', resourceType = 'auto') => {
   return new Promise((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream(
       {
         folder,
-        resource_type: 'auto'
+        resource_type: resourceType
       },
       (error, result) => {
         if (error) {
@@ -3562,7 +3562,8 @@ app.post('/api/papers', optionalAuthenticate, async (req, res) => {
         const buffer = Buffer.from(matches[2], 'base64');
         if (isCloudinaryConfigured) {
           try {
-            fileUrl = await uploadToCloudinary(buffer, 'vitlife_papers');
+            const resType = fileExtension === '.pdf' ? 'raw' : 'auto';
+            fileUrl = await uploadToCloudinary(buffer, 'vitlife_papers', resType);
           } catch (cloudinaryErr) {
             console.error('Cloudinary upload failed, falling back to local:', cloudinaryErr);
             const fileExtension = path.extname(fileName) || '.pdf';
