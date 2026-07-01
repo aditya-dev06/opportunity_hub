@@ -2960,6 +2960,58 @@ const MESS_NAMES = {
   'mayuri-girls': 'Mayuri Girls Mess'
 };
 
+const MAYURI_BOYS_NEW_MENU = {
+  // 0: Sunday
+  0: {
+    breakfast: 'Masala Dosa / Mix Veg Dosa, Sambhar, Chutney, Sprouts, Banana, Boiled Egg, Bread, Butter, Jam, Tea, Milk, Coffee',
+    lunch: 'Plain Roti, Veg Biryani, Butter Paneer Masala, Chicken Biryani (Limited Spices), Onion Raita, Dal Kolhapuri, Pickle',
+    snacks: 'Pasta (White/Red Sauce), Sauce/Chutney, Tea, Coffee, Milk',
+    dinner: 'Roti, Aloo White Peas Masala, Dal Makhani, Plain Rice - South, Carrot/Cabbage Poriyal, Paruppu Rasam (Pulses), Veg Shorba Soup, Gulab Jamun'
+  },
+  // 1: Monday
+  1: {
+    breakfast: 'Idli, Vada, Sambhar, Chutney, Banana, Bread, Butter, Jam, Tea, Milk, Coffee',
+    lunch: 'Tawa Roti, Jeera Aloo / Sev Tamatar, Daal Fry, Butter Milk, Mix Salad, Plain Rice - North & South, More Kuzhambu, Raw Banana Poriyal, Pepper Rasam, Pickle',
+    snacks: 'Kachori, Tamarind Chutney, Tea, Milk, Coffee',
+    dinner: 'Butter Roti / Plain Roti, Kadhai Mix Veg, Egg Gravy, Veg Poriyal, Plain Rice - North & South, Tomato Rasam, Yellow Daal, Rice Kheer'
+  },
+  // 2: Tuesday
+  2: {
+    breakfast: 'Poha, Jalebi, Pongal, Chutney, Jeera Man, Mix Cut Fruit, Bread, Butter, Jam, Tea, Milk, Coffee',
+    lunch: 'Puri, White Channa [Md-Spicy], Mix Daal, Mix Salad, Plain Rice - North & South, Bottle Gourd Kuzhambu, Tomato Rasam, Butter Milk / Juice, Pickle',
+    snacks: 'Variety of Samosa (Aloo Gobhi/Matar), Red Sauce, Green Chutney, Tea, Coffee, Milk',
+    dinner: 'Butter Roti / Plain Roti, Fruit Custard, Veg Jalfrezi / Soya Badi Masala, Dal Tadka, Plain Rice - North & South, Pepper Rasam, Pickle'
+  },
+  // 3: Wednesday
+  3: {
+    breakfast: 'Pav Bhaji, Upma, Chutney, Sprouts, Banana, Boiled Egg, Bread, Butter, Jam, Tea, Milk, Coffee',
+    lunch: 'Roti, Veg Kofta, Dal Tadka, Matar Pulao, Fryums, Sweet Boondi, Plain Rice - South, Vegetable Sambar, Paruppu Rasam, Pickle',
+    snacks: 'Cutlet (2 Nos.), Red Chilli Sauce, Tea, Coffee, Milk',
+    dinner: 'Butter Roti, Paneer Masala (Less Oil & Spices), Kadai Chicken Masala (Less Oil & Spices), Plain Dal, Plain Rice - North & South, Ingi Rasam, Pickle, Butter Roti'
+  },
+  // 4: Thursday
+  4: {
+    breakfast: 'Aloo Paratha, Dahi, Banana, Bread, Butter, Jam, Tea, Milk, Coffee',
+    lunch: 'Roti - Plain, Rajma, Jeera Rice, Seasonal-Veg, Mixed Veg Salad, Rice - Plain, Veg-Sambar, Beetroot Priyal, Rasam, Pickle',
+    snacks: 'Noodles / Fried Idli, Sauce / Coconut Chutney, Tea, Coffee, Milk',
+    dinner: 'Butter Roti (Plain), Egg Gravy, Green Peas Masala, Dal Fry, Jeera Rice, Sooji Halwa, Pepper Rasam, Pickle'
+  },
+  // 5: Friday
+  5: {
+    breakfast: 'Onion Uthappam, Onion Tomato Chutney, Sprouts, Fruit Salad, Boiled Egg, Bread, Butter, Jam, Tea, Milk, Coffee',
+    lunch: 'Roti - Plain, Kadi Pakoda, Dal Fry, Plain Rice, Mix Salad, Plain Rice - South, Brinjal Kuzhambu, Veg Aviyal, Beetroot Priyal, Pickle',
+    snacks: 'Vada Pav, Green Chutney, Tea, Coffee, Milk',
+    dinner: 'Plain Roti, Tandoori Butter Chicken Gravy, Kadai Paneer, Dal Tadka - Medium Spicy, Plain Rice - North & South, Puli Rasam (Tamarind), Pickle'
+  },
+  // 6: Saturday
+  6: {
+    breakfast: 'Chole with Lemon Slice, Bhature, Mix Cut Fruit, Bread, Butter, Jam, Tea, Milk, Coffee',
+    lunch: 'Roti - Plain, Aloo Hara Matar / Gilki Masala, Ghee Rice, Dal Makhni, Plain Rice - South, Potato Kara Poriyal, Butter Milk, Mix Veg Sambar, Rasam, Pickle',
+    snacks: 'Bread Pakoda, Red Tomato Chutney, Tea, Coffee, Milk',
+    dinner: 'Plain Roti, Veg Pulao, Lobia Gravy (Chawli), Toor Dal Fry, Plain Rice - South, Paruppu Rasam, Pickle'
+  }
+};
+
 const MEAL_KEYS = ['breakfast', 'lunch', 'snacks', 'dinner'];
 
 /**
@@ -3028,6 +3080,15 @@ app.get('/api/mess-menu/:messId', async (req, res) => {
     return res.status(400).json({
       success: false,
       error: `Invalid mess ID. Valid IDs: ${VALID_MESS_IDS.join(', ')}`
+    });
+  }
+
+  // Serve the updated static June 2026 menu for Mayuri Mess
+  if (messId === 'mayuri-boys' || messId === 'mayuri-girls') {
+    return res.json({
+      success: true,
+      cached: false,
+      data: { name: MESS_NAMES[messId], menu: MAYURI_BOYS_NEW_MENU }
     });
   }
 
