@@ -133,11 +133,6 @@ export default function CommunityPage({ user }) {
     setError('');
     setSuccess('');
 
-    if (!user) {
-      setError('You must be signed in to upload papers.');
-      return;
-    }
-
     if (!courseCode || !courseTitle) {
       setError('Please fill in all required fields.');
       return;
@@ -177,12 +172,16 @@ export default function CommunityPage({ user }) {
         payload.url = uploadUrl;
       }
 
+      const headers = {
+        'Content-Type': 'application/json'
+      };
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
       const res = await fetch('/api/papers', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
+        headers,
         body: JSON.stringify(payload)
       });
 
@@ -360,13 +359,7 @@ export default function CommunityPage({ user }) {
             </div>
             <button
               className="pyq-upload-trigger-btn"
-              onClick={() => {
-                if (!user) {
-                  alert('Please sign in to upload papers.');
-                } else {
-                  setShowUploadModal(true);
-                }
-              }}
+              onClick={() => setShowUploadModal(true)}
             >
               <span>+</span> Share a Paper
             </button>

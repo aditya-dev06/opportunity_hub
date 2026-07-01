@@ -2284,6 +2284,24 @@ const authenticate = async (req, res, next) => {
   next();
 };
 
+const optionalAuthenticate = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    req.user = null;
+    return next();
+  }
+
+  const token = authHeader.split(' ')[1];
+  const user = await verifyToken(token);
+  if (!user) {
+    req.user = null;
+    return next();
+  }
+
+  req.user = user;
+  next();
+};
+
 
 // Role-based access middleware
 const requireClubManager = (req, res, next) => {
@@ -3520,8 +3538,8 @@ app.get('/api/papers/moderation', authenticate, requireAdmin, async (req, res) =
   }
 });
 
-// 3. POST /api/papers - Upload a new paper (Authenticated Users)
-app.post('/api/papers', authenticate, async (req, res) => {
+// 3. POST /api/papers - Upload a new paper (Authenticated & Guests)
+app.post('/api/papers', optionalAuthenticate, async (req, res) => {
   try {
     const { courseCode, courseTitle, department, examType, year, semester, url, fileData, fileName, examDate } = req.body;
 
@@ -3600,7 +3618,7 @@ app.post('/api/papers', authenticate, async (req, res) => {
       }
     }
 
-    const isAdmin = req.user.role === 'admin';
+    const isAdmin = req.user && req.user.role === 'admin';
     const paperId = `paper_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
     const newPaper = {
@@ -3612,7 +3630,7 @@ app.post('/api/papers', authenticate, async (req, res) => {
       semester: parseInt(semester, 10) || 1,
       url: fileUrl.trim(),
       examDate: examDate ? examDate.trim() : null,
-      uploadedBy: req.user.email,
+      uploadedBy: req.user ? req.user.email : 'Community',
       status: isAdmin ? 'approved' : 'pending',
       createdAt: new Date().toISOString()
     };
